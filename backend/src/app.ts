@@ -14,4 +14,7 @@ app.post("/students", studentController.create);
 app.put("/students/:id", studentController.update);
 app.delete("/students/:id", studentController.remove);
 
+app.get("/", (req, res) => {
+  res.json({ message: "Velona aho eh" });
+});
 export default app;
