@@ -17,7 +17,7 @@ function App() {
     <main className="container">
       <h1>Student database</h1>
       {loading && <p className="status">Loading students...</p>}
-      {error && <p className="status error">{error}</p>}
+      {error && <p className="status">{error}</p>}
       {!loading && !error && (
         <table>
           <thead>
