@@ -38,8 +38,6 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     const id = Number(req.params.id);
     const updatedStudent = await studentService.updateStudent(id, req.body);
     if (!updatedStudent) {
-      // ERROR FIXED: missing return caused double response
-      // (404 was sent, then 200 with null data followed)
       res.status(404).json({ success: false, message: "Student not found" });
       return;
     }
@@ -51,7 +49,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = Number(req.params.id);//////await studentService.deleteStudent(id);
+    const id = Number(req.params.id);
     res.status(204).json({ success: true, message: "Student removed" });
   } catch (err) {
     if ((err as Error).message.toLowerCase().includes("not found")) {
