@@ -1,56 +1,103 @@
-import { getStudents } from "./api/studentAPI";
 import { useEffect, useState } from "react";
+import { getStudents, createStudent } from "./api/studentAPI.js";
 
-function App() {
+export default function App() {
   const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [form, setForm] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    age: "",
+  });
 
-  useEffect(() => {
+  function loadStudents() {
     getStudents()
       .then(setStudents)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => setError(err.message));
+  }
+
+  useEffect(() => {
+    loadStudents();
   }, []);
 
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    try {
+      await createStudent({ ...form, age: form.age ? Number(form.age) : null });
+      setForm({ first_name: "", last_name: "", email: "", age: "" });
+      loadStudents();
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   return (
-    <main className="container">
-      <h1>Student database</h1>
-      {loading && <p className="status">Loading students...</p>}
-      {error && <p className="status">{error}</p>}
-      {!loading && !error && (
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>First name</th>
-              <th>Last name</th>
-              <th>Email</th>
-              <th>Age</th>
+    <div>
+      <h1>Liste des Étudiants</h1>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <form onSubmit={handleSubmit}>
+        <input
+          name="last_name"
+          placeholder="Nom"
+          value={form.last_name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="first_name"
+          placeholder="Prénom"
+          value={form.first_name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="age"
+          type="number"
+          placeholder="Âge"
+          value={form.age}
+          onChange={handleChange}
+        />
+        <button type="submit">Ajouter</button>
+      </form>
+
+      <table border="1" cellPadding="6">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Âge</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((s) => (
+            <tr key={s.id}>
+              <td>{s.id}</td>
+              <td>{s.last_name}</td>
+              <td>{s.first_name}</td>
+              <td>{s.email}</td>
+              <td>{s.age ?? "-"}</td>
             </tr>
-          </thead>
-          <tbody>
-            {students.map((s) => (
-              <tr key={s.id}>
-                <td className="id">{s.id}</td>
-                <td>{s.first_name}</td>
-                <td>{s.last_name}</td>
-                <td className="email">{s.email}</td>
-                <td className="age">{s.age ?? "-"}</td>
-              </tr>
-            ))}
-            {students.length === 0 && (
-              <tr>
-                <td colSpan="5" className="empty">
-                  No students found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      )}
-    </main>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
-
-export default App;
