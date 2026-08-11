@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getStudents, createStudent } from "./api/studentAPI.js";
-
-export default function App() {
+const App = () => {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -100,4 +99,5 @@ export default function App() {
       </table>
     </div>
   );
-}
+};
+export default App;
