@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import { Router, type Request, type Response } from "express";
 import * as studentService from "../services/student.service.js";
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
@@ -72,3 +72,13 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ success: false, message: (err as Error).message });
   }
 };
+
+const router = Router();
+
+router.get("/", getAll);
+router.get("/:id", getOne);
+router.post("/", create);
+router.put("/:id", update);
+router.delete("/:id", remove);
+
+export default router;
