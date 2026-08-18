@@ -4,7 +4,7 @@ A full-stack student management application: an Express + TypeScript REST API ba
 
 ## Features
 
-- **Authentication** — register and login with JWT (1-day expiry), bcrypt-hashed passwords
+- **Authentication** — register and login with JWT (1-hour expiry), bcrypt-hashed passwords
 - **API key protection** — every request must send an `x-api-key` header
 - **Student management** — list, create, update, and delete students (JWT required)
 - **Statistics** — total, average/min/max age, and students added in the last 7 days
@@ -12,12 +12,12 @@ A full-stack student management application: an Express + TypeScript REST API ba
 
 ## Tech Stack
 
-| Layer      | Technology                          |
-| ---------- | ----------------------------------- |
-| Backend    | Node.js, Express 5, TypeScript      |
-| Database   | PostgreSQL (node-postgres)          |
-| Security   | JSON Web Tokens, bcrypt             |
-| Frontend   | React 19, Vite                      |
+| Layer    | Technology                     |
+| -------- | ------------------------------ |
+| Backend  | Node.js, Express 5, TypeScript |
+| Database | PostgreSQL (node-postgres)     |
+| Security | JSON Web Tokens, bcrypt        |
+| Frontend | React 19, Vite                 |
 
 ## Getting Started
 
@@ -47,16 +47,16 @@ npm run dev        # http://localhost:5173
 
 All endpoints require the `x-api-key` header; `/students` also requires `Authorization: Bearer <token>`.
 
-| Method | Route             | Purpose                            |
-| ------ | ----------------- | ---------------------------------- |
-| POST   | `/auth/register`  | Create account, returns a JWT      |
-| POST   | `/auth/login`     | Log in, returns a JWT              |
-| GET    | `/students`       | List students                      |
-| GET    | `/students/stats` | Students statistics                |
-| GET    | `/students/:id`   | Get a single student               |
-| POST   | `/students`       | Create a student                   |
-| PUT    | `/students/:id`   | Update a student                   |
-| DELETE | `/students/:id`   | Delete a student                   |
+| Method | Route             | Purpose                       |
+| ------ | ----------------- | ----------------------------- |
+| POST   | `/auth/register`  | Create account, returns a JWT |
+| POST   | `/auth/login`     | Log in, returns a JWT         |
+| GET    | `/students`       | List students                 |
+| GET    | `/students/stats` | Students statistics           |
+| GET    | `/students/:id`   | Get a single student          |
+| POST   | `/students`       | Create a student              |
+| PUT    | `/students/:id`   | Update a student              |
+| DELETE | `/students/:id`   | Delete a student              |
 
 ## Project Structure
 
@@ -75,7 +75,3 @@ frontend/src/
   components/               Login form and stats components
   App.jsx                   Main application logic and views
 ```
-
-## Default Account
-
-Seeded at startup: `admin@example.com` / `admin123`
