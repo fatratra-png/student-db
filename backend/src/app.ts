@@ -15,7 +15,7 @@ app.use(apiKeyAuth);
 app.use("/auth", authRouter);
 app.use("/students", requireAuth, studentRouter);
 
-app.get("/", (_req, res) => {
+app.get("/health", (_req, res) => {
   res.json({ message: "API alive" });
 });
 
