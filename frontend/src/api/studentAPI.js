@@ -1,21 +1,54 @@
-const BASE_URL = "http://localhost:3000/students";
+const BASE_URL = "http://localhost:3000";
+
+const getToken = () => localStorage.getItem("token");
+
+const headers = () => ({
+  "Content-Type": "application/json",
+  "X-API-Key": import.meta.env.VITE_API_KEY,
+  ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
+});
+
 const handleResponse = async (res) => {
   const body = await res.json();
   if (!res.ok) {
     throw new Error(body.message || "Error");
   }
-  return body.data;
+  return body;
 };
-export const getStudents = async () => {
-  const res = await fetch(BASE_URL);
+
+export const login = async (credentials) => {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify(credentials),
+  });
   return handleResponse(res);
 };
 
-export const createStudent = async (student) => {
-  const res = await fetch(BASE_URL, {
+export const register = async (credentials) => {
+  const res = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(student),
+    headers: headers(),
+    body: JSON.stringify(credentials),
   });
   return handleResponse(res);
+};
+
+export const getStudents = async () => {
+  const res = await fetch(`${BASE_URL}/students`, { headers: headers() });
+  return (await handleResponse(res)).data;
+};
+
+export const getStats = async () => {
+  const res = await fetch(`${BASE_URL}/students/stats`, { headers: headers() });
+  return (await handleResponse(res)).data;
+};
+
+export const createStudent = async (student) => {
+  const res = await fetch(`${BASE_URL}/students`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify(student),
+  });
+  return (await handleResponse(res)).data;
 };

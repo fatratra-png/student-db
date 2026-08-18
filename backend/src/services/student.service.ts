@@ -1,11 +1,12 @@
 import * as studentRepository from "../repositories/student.repository.js";
-import type { Student, StudentInput } from "../types/student.types.js";
+import { HttpError } from "../security/errors.js";
 import { validateStudentInput } from "../security/validation.js";
+import type { Student, StudentInput } from "../types/student.types.js";
 
-const ensureValidInput = (data: StudentInput): void => {
+const validate = (data: StudentInput): void => {
   const errors = validateStudentInput(data);
   if (errors.length > 0) {
-    throw new Error(errors.join(" "));
+    throw new HttpError(400, errors.join(" "));
   }
 };
 
@@ -20,26 +21,40 @@ export const getStudentById = async (id: number): Promise<Student | null> => {
 export const createStudent = async (
   data: StudentInput,
 ): Promise<Student | null> => {
-  ensureValidInput(data);
-  return studentRepository.create(data);
+  validate(data);
+  try {
+    return await studentRepository.create(data);
+  } catch (err) {
+    if ((err as { code?: string }).code === "23505") {
+      throw new HttpError(409, "A student with this email already exists.");
+    }
+    throw err;
+  }
 };
 
 export const updateStudent = async (
   id: number,
   data: StudentInput,
 ): Promise<Student | null> => {
-  ensureValidInput(data);
-  return studentRepository.update(id, data);
+  validate(data);
+  try {
+    return await studentRepository.update(id, data);
+  } catch (err) {
+    if ((err as { code?: string }).code === "23505") {
+      throw new HttpError(409, "A student with this email already exists.");
+    }
+    throw err;
+  }
 };
 
 export const deleteStudent = async (id: number): Promise<void> => {
-  const existingStudent = await studentRepository.findById(id);
-  if (!existingStudent) {
-    throw new Error(`Student with ID ${id} not found.`);
+  const student = await studentRepository.findById(id);
+  if (!student) {
+    throw new HttpError(404, `Student with ID ${id} not found.`);
   }
   await studentRepository.remove(id);
 };
 
-export const getStudentStats = async () => {
+export const getStudentStats = () => {
   return studentRepository.findStats();
 };

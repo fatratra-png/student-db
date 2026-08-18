@@ -1,30 +1,37 @@
 import { Router, type Request, type Response } from "express";
 import * as studentService from "../services/student.service.js";
+import { httpError } from "../security/errors.js";
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const students = await studentService.getAllStudents();
     res.status(200).json({ success: true, data: students });
   } catch (err) {
-    res.status(500).json({ success: false, message: (err as Error).message });
+    const { status, message } = httpError(err);
+    res.status(status).json({ success: false, message });
   }
 };
 
+const isInvalidId = (id: unknown): boolean => {
+  const value = Number(id);
+  return !Number.isInteger(value) || value <= 0;
+};
+
 export const getOne = async (req: Request, res: Response): Promise<void> => {
+  if (isInvalidId(req.params.id)) {
+    res.status(400).json({ success: false, message: "Invalid student id" });
+    return;
+  }
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      res.status(400).json({ success: false, message: "Invalid student id" });
-      return;
-    }
-    const student = await studentService.getStudentById(id);
+    const student = await studentService.getStudentById(Number(req.params.id));
     if (!student) {
       res.status(404).json({ success: false, message: "Student not found" });
       return;
     }
     res.status(200).json({ success: true, data: student });
   } catch (err) {
-    res.status(500).json({ success: false, message: (err as Error).message });
+    const { status, message } = httpError(err);
+    res.status(status).json({ success: false, message });
   }
 };
 
@@ -33,64 +40,53 @@ export const create = async (req: Request, res: Response): Promise<void> => {
     const newStudent = await studentService.createStudent(req.body);
     res.status(201).json({ success: true, data: newStudent });
   } catch (err) {
-    res.status(409).json({
-      success: false,
-      message:
-        (err as { code?: string }).code === "23505"
-          ? "A student with this email already exists."
-          : (err as Error).message,
-    });
+    const { status, message } = httpError(err);
+    res.status(status).json({ success: false, message });
   }
 };
 
 export const update = async (req: Request, res: Response): Promise<void> => {
+  if (isInvalidId(req.params.id)) {
+    res.status(400).json({ success: false, message: "Invalid student id" });
+    return;
+  }
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      res.status(400).json({ success: false, message: "Invalid student id" });
-      return;
-    }
-    const updatedStudent = await studentService.updateStudent(id, req.body);
+    const updatedStudent = await studentService.updateStudent(
+      Number(req.params.id),
+      req.body,
+    );
     if (!updatedStudent) {
       res.status(404).json({ success: false, message: "Student not found" });
       return;
     }
     res.status(200).json({ success: true, data: updatedStudent });
   } catch (err) {
-    res.status(409).json({
-      success: false,
-      message:
-        (err as { code?: string }).code === "23505"
-          ? "A student with this email already exists."
-          : (err as Error).message,
-    });
+    const { status, message } = httpError(err);
+    res.status(status).json({ success: false, message });
   }
 };
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
+  if (isInvalidId(req.params.id)) {
+    res.status(400).json({ success: false, message: "Invalid student id" });
+    return;
+  }
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) {
-      res.status(400).json({ success: false, message: "Invalid student id" });
-      return;
-    }
-    await studentService.deleteStudent(id);
+    await studentService.deleteStudent(Number(req.params.id));
     res.status(204).end();
   } catch (err) {
-    if ((err as Error).message.toLowerCase().includes("not found")) {
-      res.status(404).json({ success: false, message: (err as Error).message });
-      return;
-    }
-    res.status(500).json({ success: false, message: (err as Error).message });
+    const { status, message } = httpError(err);
+    res.status(status).json({ success: false, message });
   }
 };
 
-export const getStats = async (_req: Request, res: Response): Promise<void> => {
+export const getStats = async (req: Request, res: Response): Promise<void> => {
   try {
     const stats = await studentService.getStudentStats();
     res.status(200).json({ success: true, data: stats });
   } catch (err) {
-    res.status(500).json({ success: false, message: (err as Error).message });
+    const { status, message } = httpError(err);
+    res.status(status).json({ success: false, message });
   }
 };
 
