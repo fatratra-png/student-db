@@ -16,3 +16,10 @@ ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO students (first_name, last_name, email, age) VALUES ('Alice', 'Johnson', 'alice.johnson@example.com', 25)
 ON CONFLICT (email) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS users(
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);

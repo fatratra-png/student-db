@@ -3,7 +3,7 @@ export interface Student {
   first_name: string;
   last_name: string;
   email: string;
-  age: number;
+  age: number | null;
   created_at: Date;
 }
 
@@ -11,5 +11,5 @@ export interface StudentInput {
   first_name: string;
   last_name: string;
   email: string;
-  age: number;
+  age?: number | null;
 }

@@ -33,7 +33,13 @@ export const create = async (req: Request, res: Response): Promise<void> => {
     const newStudent = await studentService.createStudent(req.body);
     res.status(201).json({ success: true, data: newStudent });
   } catch (err) {
-    res.status(400).json({ success: false, message: (err as Error).message });
+    res.status(409).json({
+      success: false,
+      message:
+        (err as { code?: string }).code === "23505"
+          ? "A student with this email already exists."
+          : (err as Error).message,
+    });
   }
 };
 
@@ -51,7 +57,13 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     }
     res.status(200).json({ success: true, data: updatedStudent });
   } catch (err) {
-    res.status(400).json({ success: false, message: (err as Error).message });
+    res.status(409).json({
+      success: false,
+      message:
+        (err as { code?: string }).code === "23505"
+          ? "A student with this email already exists."
+          : (err as Error).message,
+    });
   }
 };
 
@@ -73,9 +85,19 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const getStats = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const stats = await studentService.getStudentStats();
+    res.status(200).json({ success: true, data: stats });
+  } catch (err) {
+    res.status(500).json({ success: false, message: (err as Error).message });
+  }
+};
+
 const router = Router();
 
 router.get("/", getAll);
+router.get("/stats", getStats);
 router.get("/:id", getOne);
 router.post("/", create);
 router.put("/:id", update);
