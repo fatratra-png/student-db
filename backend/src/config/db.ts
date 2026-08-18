@@ -5,12 +5,18 @@ dotenv.config();
 
 const { Pool } = pkg;
 
+const isRemote = !(
+  process.env.PGHOST === "localhost" || process.env.PGHOST === "127.0.0.1"
+);
+
 export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
   host: process.env.PGHOST,
   port: Number(process.env.PGPORT),
   user: process.env.PGUSER,
   password: process.env.PGPASSWORD,
   database: process.env.PGDATABASE,
+  ssl: isRemote ? { rejectUnauthorized: false } : undefined,
 });
 
 pool
