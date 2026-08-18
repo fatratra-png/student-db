@@ -56,15 +56,17 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h1>Liste des Étudiants</h1>
-      <button onClick={handleLogout}>Déconnexion</button>
+    <div className="container">
+      <header className="app-header">
+        <h1>Liste des Étudiants</h1>
+        <button onClick={handleLogout}>Déconnexion</button>
+      </header>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
       {stats && <StudentStats stats={stats} />}
 
-      <form onSubmit={handleSubmit}>
+      <form className="form-grid" onSubmit={handleSubmit}>
         <input
           name="last_name"
           placeholder="Nom"
@@ -94,31 +96,33 @@ const App = () => {
           value={form.age}
           onChange={handleChange}
         />
-        <button type="submit">Ajouter</button>
+        <button className="btn-primary" type="submit">Ajouter</button>
       </form>
 
-      <table border="1" cellPadding="6">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th>Âge</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((s) => (
-            <tr key={s.id}>
-              <td>{s.id}</td>
-              <td>{s.last_name}</td>
-              <td>{s.first_name}</td>
-              <td>{s.email}</td>
-              <td>{s.age ?? "-"}</td>
+      <div className="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Email</th>
+              <th>Âge</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map((s) => (
+              <tr key={s.id}>
+                <td className="id">{s.id}</td>
+                <td>{s.last_name}</td>
+                <td>{s.first_name}</td>
+                <td>{s.email}</td>
+                <td className="age">{s.age ?? "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
