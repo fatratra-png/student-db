@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-  getStudents,
-  getStats,
-  createStudent,
-  login,
-  register,
-} from "./api/studentAPI.js";
+import { createStudent, getStats, getStudents } from "./api/studentAPI.js";
+import LoginForm from "./components/LoginForm.jsx";
+import StudentStats from "./components/StudentStats.jsx";
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [students, setStudents] = useState([]);
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
-  const [authForm, setAuthForm] = useState({ email: "", password: "" });
-  const [isRegister, setIsRegister] = useState(false);
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -21,50 +15,31 @@ const App = () => {
     age: "",
   });
 
-  function loadStudents() {
+  const loadStudents = () => {
     Promise.all([getStudents(), getStats()])
       .then(([studentList, statsData]) => {
         setStudents(studentList);
         setStats(statsData);
       })
       .catch((err) => setError(err.message));
-  }
+  };
 
   useEffect(() => {
     if (token) loadStudents();
   }, [token]);
 
-  function handleAuthChange(e) {
-    setAuthForm({ ...authForm, [e.target.name]: e.target.value });
-  }
-
-  async function handleAuthSubmit(e) {
-    e.preventDefault();
-    setError("");
-    try {
-      const result = isRegister
-        ? await register(authForm)
-        : await login(authForm);
-      localStorage.setItem("token", result.token);
-      setToken(result.token);
-      setAuthForm({ email: "", password: "" });
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
-  function handleLogout() {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     setToken(null);
     setStudents([]);
     setStats(null);
-  }
+  };
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  };
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
@@ -74,40 +49,10 @@ const App = () => {
     } catch (err) {
       setError(err.message);
     }
-  }
+  };
 
   if (!token) {
-    return (
-      <div>
-        <h1>Connexion</h1>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={handleAuthSubmit}>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={authForm.email}
-            onChange={handleAuthChange}
-            required
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Mot de passe"
-            value={authForm.password}
-            onChange={handleAuthChange}
-            required
-          />
-          <button type="submit">{isRegister ? "S'inscrire" : "Se connecter"}</button>
-        </form>
-        <p>
-          {isRegister ? "Déjà un compte ? " : "Pas de compte ? "}
-          <button onClick={() => setIsRegister(!isRegister)}>
-            {isRegister ? "Se connecter" : "S'inscrire"}
-          </button>
-        </p>
-      </div>
-    );
+    return <LoginForm onLogin={setToken} />;
   }
 
   return (
@@ -117,16 +62,7 @@ const App = () => {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {stats && (
-        <div>
-          <h2>Statistiques</h2>
-          <p>Total : {stats.total}</p>
-          <p>Âge moyen : {stats.average_age ?? "-"}</p>
-          <p>Âge min : {stats.min_age ?? "-"}</p>
-          <p>Âge max : {stats.max_age ?? "-"}</p>
-          <p>Ajoutés cette semaine : {stats.created_this_week}</p>
-        </div>
-      )}
+      {stats && <StudentStats stats={stats} />}
 
       <form onSubmit={handleSubmit}>
         <input
@@ -186,4 +122,5 @@ const App = () => {
     </div>
   );
 };
+
 export default App;
