@@ -1,7 +1,7 @@
-import * as studentRepository from "../repositories/student.repository.js";
+import * as studentRepository from "../repositories/studentRepository.js";
 import { HttpError } from "../security/errors.js";
 import { validateStudentInput } from "../security/validation.js";
-import type { Student, StudentInput } from "../types/student.types.js";
+import type { Student, StudentInput } from "../types/studentTypes.js";
 
 const validate = (data: StudentInput): void => {
   const errors = validateStudentInput(data);

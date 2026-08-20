@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
-import * as authService from "../services/auth.service.js";
+import * as authService from "../services/authService.js";
 import { httpError } from "../security/errors.js";
-import type { UserInput } from "../types/user.types.js";
+import type { UserInput } from "../types/userTypes.js";
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {

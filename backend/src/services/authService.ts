@@ -1,9 +1,9 @@
-import * as userRepository from "../repositories/user.repository.js";
+import * as userRepository from "../repositories/userRepository.js";
 import { HttpError } from "../security/errors.js";
 import { signToken } from "../security/jwt.js";
 import { comparePassword, hashPassword } from "../security/password.js";
 import { validateCredentials } from "../security/validation.js";
-import type { PublicUser, User, UserInput } from "../types/user.types.js";
+import type { PublicUser, User, UserInput } from "../types/userTypes.js";
 
 const validate = (data: UserInput): void => {
   const errors = validateCredentials(data);

@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import * as studentService from "../services/student.service.js";
+import * as studentService from "../services/studentService.js";
 import { httpError } from "../security/errors.js";
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
