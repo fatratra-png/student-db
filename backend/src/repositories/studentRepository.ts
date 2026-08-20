@@ -1,5 +1,5 @@
 import { pool } from "../config/db.js";
-import type { Student, StudentInput } from "../types/student.types.js";
+import type { Student, StudentInput } from "../types/studentTypes.js";
 
 export interface StudentStats {
   total: number;

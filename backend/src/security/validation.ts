@@ -1,4 +1,4 @@
-import type { StudentInput } from "../types/student.types.js";
+import type { StudentInput } from "../types/studentTypes.js";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;

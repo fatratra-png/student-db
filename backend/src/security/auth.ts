@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { verifyToken } from "./jwt.js";
-import type { PublicUser } from "../types/user.types.js";
+import type { PublicUser } from "../types/userTypes.js";
 
 export interface AuthenticatedRequest extends Request {
   user?: PublicUser;

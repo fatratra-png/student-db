@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import type { PublicUser } from "../types/user.types.js";
+import type { PublicUser } from "../types/userTypes.js";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
