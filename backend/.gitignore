@@ -36,3 +36,5 @@ coverage/
 .tmp/
 .vercel
 .env*
+
+!.env.example
