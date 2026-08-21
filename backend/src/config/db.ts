@@ -34,10 +34,12 @@ async function resolveHost(address: string): Promise<string> {
 
 const host = await resolveHost(hostname);
 
+const isLocalDb = ["localhost", "127.0.0.1", "::1"].includes(hostname);
+
 export const pool = new Pool({
   connectionString,
   host,
-  ssl: { rejectUnauthorized: false },
+  ssl: isLocalDb ? false : { rejectUnauthorized: false },
   options: "-c search_path=public",
   connectionTimeoutMillis: 10000,
 });
