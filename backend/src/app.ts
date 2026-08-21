@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import cors from "cors";
-import authRouter from "./controllers/auth.controller.js";
-import studentRouter from "./controllers/student.controller.js";
+import authRouter from "./controllers/authController.js";
+import studentRouter from "./controllers/studentController.js";
 import { apiKeyAuth, requireAuth } from "./security/auth.js";
 import express from "express";
 

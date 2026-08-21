@@ -23,10 +23,10 @@ const LoginForm = ({ onLogin }) => {
   };
 
   return (
-    <div>
+    <div className="auth">
       <h1>{isRegister ? "Créer un compte" : "Connexion"}</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {error && <p className="error">{error}</p>}
+      <form className="form-stack" onSubmit={handleSubmit}>
         <input
           name="email"
           type="email"
@@ -43,10 +43,12 @@ const LoginForm = ({ onLogin }) => {
           onChange={handleChange}
           required
         />
-        <button type="submit">{isRegister ? "S'inscrire" : "Se connecter"}</button>
+        <button className="btn-primary" type="submit">
+          {isRegister ? "S'inscrire" : "Se connecter"}
+        </button>
       </form>
       <p>
-        <button onClick={() => setIsRegister(!isRegister)}>
+        <button className="link-btn" onClick={() => setIsRegister(!isRegister)}>
           {isRegister ? "Déjà un compte ? Se connecter" : "Pas de compte ? S'inscrire"}
         </button>
       </p>
