@@ -16,13 +16,24 @@ app.use(
 );
 app.use(express.json());
 
+app.get("/", (_req, res) => {
+  res.json({
+    success: true,
+    data: {
+      name: "Student DB API",
+      status: "online",
+      health: "/health",
+    },
+  });
+});
+
+app.get("/health", (_req, res) => {
+  res.json({ success: true, data: { status: "ok" } });
+});
+
 app.use(apiKeyAuth);
 
 app.use("/auth", authRouter);
 app.use("/students", requireAuth, studentRouter);
-
-app.get("/health", (_req, res) => {
-  res.json({ message: "API alive" });
-});
 
 export default app;
