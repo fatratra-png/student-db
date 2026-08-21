@@ -7,7 +7,13 @@ import express from "express";
 
 const app: Express = express();
 
-app.use(cors());
+const corsOrigin = process.env.CORS_ORIGIN;
+
+app.use(
+  cors({
+    origin: corsOrigin ? corsOrigin.split(",").map((o) => o.trim()) : true,
+  }),
+);
 app.use(express.json());
 
 app.use(apiKeyAuth);
