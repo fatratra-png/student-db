@@ -4,7 +4,7 @@ import { seedDatabase } from "./config/seed.js";
 
 dotenv.config();
 
-const PORT: number = Number(process.env.PORT);
+const PORT: number = Number(process.env.PORT) || 3000;
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 3000;
@@ -14,7 +14,7 @@ async function start(): Promise<void> {
     try {
       await seedDatabase();
       app.listen(PORT, () => {
-        console.log(`Server is launched on http://localhost:${PORT}`);
+        console.log(`Server is listening on port ${PORT}`);
       });
       return;
     } catch (err) {
